@@ -51,7 +51,7 @@
 /* ============================================================
  * COLOR THEMES
  *
- * 5 dark themes sharing structure, swapping only the primary
+ * 5 accent themes sharing structure, swapping only the primary
  * accent (and a tiny hue rotation on the slate base). Switched
  * at runtime by setting `document.documentElement.dataset.theme`
  * — see ThemeProvider + the inline boot script in layout.tsx.
@@ -254,6 +254,141 @@ html[data-theme="rose"] {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.28 0.012 15);
   --sidebar-ring: oklch(0.645 0.22 16);
+}
+
+/* ============================================================
+ * LIGHT COLOR SCHEME
+ *
+ * Overrides surface tokens only. Accent (--primary*, --ring,
+ * --chart-1, sidebar-primary) still come from the active
+ * html[data-theme="..."] block above.
+ * ============================================================ */
+
+html[data-color-scheme="light"] {
+  color-scheme: light;
+
+  --background: oklch(0.985 0.006 260);
+  --foreground: oklch(0.22 0.025 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.025 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.025 260);
+  --secondary: oklch(0.96 0.008 260);
+  --secondary-foreground: oklch(0.22 0.025 260);
+  --muted: oklch(0.96 0.008 260);
+  --muted-foreground: oklch(0.48 0.02 260);
+  --accent: oklch(0.94 0.012 260);
+  --accent-foreground: oklch(0.22 0.025 260);
+  --destructive: oklch(0.55 0.22 27);
+  --border: oklch(0.9 0.012 260);
+  --input: oklch(0.9 0.012 260);
+  --chart-2: oklch(0.62 0.02 260);
+  --chart-3: oklch(0.52 0.02 260);
+  --chart-4: oklch(0.42 0.02 260);
+  --chart-5: oklch(0.35 0.02 260);
+  --sidebar: oklch(0.99 0.005 260);
+  --sidebar-foreground: oklch(0.22 0.025 260);
+  --sidebar-accent: oklch(0.94 0.012 260);
+  --sidebar-accent-foreground: oklch(0.22 0.025 260);
+  --sidebar-border: oklch(0.9 0.012 260);
+}
+
+html[data-color-scheme="dark"] {
+  color-scheme: dark;
+}
+
+/* Map legacy hard-coded slate utilities to semantic tokens in light mode. */
+html[data-color-scheme="light"] .bg-slate-950 {
+  background-color: var(--background);
+}
+html[data-color-scheme="light"] .bg-slate-950\/70 {
+  background-color: oklch(0.22 0.025 260 / 0.45);
+}
+html[data-color-scheme="light"] .bg-slate-900 {
+  background-color: var(--card);
+}
+html[data-color-scheme="light"] .bg-slate-900\/40 {
+  background-color: var(--card);
+}
+html[data-color-scheme="light"] .bg-slate-900\/50 {
+  background-color: oklch(0.22 0.025 260 / 0.04);
+}
+html[data-color-scheme="light"] .bg-slate-900\/60 {
+  background-color: var(--muted);
+}
+html[data-color-scheme="light"] .bg-slate-800 {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+html[data-color-scheme="light"] .placeholder\:text-slate-500::placeholder {
+  color: var(--muted-foreground);
+}
+html[data-color-scheme="light"] .bg-slate-800\/40,
+html[data-color-scheme="light"] .bg-slate-800\/50 {
+  background-color: var(--accent);
+}
+html[data-color-scheme="light"] .bg-slate-700 {
+  background-color: var(--muted);
+}
+html[data-color-scheme="light"] .border-slate-800,
+html[data-color-scheme="light"] .border-slate-700,
+html[data-color-scheme="light"] .border-slate-600 {
+  border-color: var(--border);
+}
+html[data-color-scheme="light"] .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border);
+}
+html[data-color-scheme="light"] .text-white {
+  color: var(--foreground);
+}
+html[data-color-scheme="light"] .text-slate-200,
+html[data-color-scheme="light"] .text-slate-300 {
+  color: var(--foreground);
+}
+html[data-color-scheme="light"] .text-slate-400,
+html[data-color-scheme="light"] .text-slate-500,
+html[data-color-scheme="light"] .text-slate-600 {
+  color: var(--muted-foreground);
+}
+html[data-color-scheme="light"] .hover\:bg-slate-800:hover,
+html[data-color-scheme="light"] .hover\:bg-slate-800\/40:hover {
+  background-color: var(--accent);
+}
+html[data-color-scheme="light"] .hover\:bg-slate-700:hover {
+  background-color: var(--muted);
+}
+html[data-color-scheme="light"] .hover\:text-white:hover {
+  color: var(--foreground);
+}
+html[data-color-scheme="light"] .hover\:border-slate-700:hover {
+  border-color: var(--border);
+}
+
+/* State variants (focus / active) — plain .bg-slate-* rules miss these. */
+html[data-color-scheme="light"] .data-active\:bg-slate-800[data-active] {
+  background-color: var(--primary-soft);
+}
+html[data-color-scheme="light"] .data-active\:text-primary[data-active] {
+  color: var(--primary);
+}
+html[data-color-scheme="light"] .focus\:bg-slate-800:focus,
+html[data-color-scheme="light"] .focus\:bg-slate-800:focus-visible,
+html[data-color-scheme="light"] .focus\:bg-slate-700:focus,
+html[data-color-scheme="light"] .focus\:bg-slate-700:focus-visible {
+  background-color: var(--accent);
+}
+html[data-color-scheme="light"] .focus\:text-white:focus,
+html[data-color-scheme="light"] .focus\:text-white:focus-visible {
+  color: var(--accent-foreground);
+}
+html[data-color-scheme="light"] .data-popup-open\:bg-slate-800\/70[data-popup-open],
+html[data-color-scheme="light"] .focus\:bg-slate-800\/70:focus,
+html[data-color-scheme="light"] .focus\:bg-slate-800\/70:focus-visible {
+  background-color: var(--accent);
+}
+html[data-color-scheme="light"] [data-highlighted].text-slate-200,
+html[data-color-scheme="light"] [data-highlighted].text-slate-300 {
+  color: var(--accent-foreground);
 }
 
 @layer base {

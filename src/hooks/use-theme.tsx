@@ -10,6 +10,12 @@ import {
 } from "react";
 
 import {
+  COLOR_SCHEME_STORAGE_KEY,
+  DEFAULT_COLOR_SCHEME,
+  isColorSchemeId,
+  type ColorSchemeId,
+} from "@/lib/color-scheme";
+import {
   DEFAULT_THEME,
   STORAGE_KEY,
   isThemeId,
@@ -17,45 +23,57 @@ import {
 } from "@/lib/themes";
 
 /**
- * ThemeProvider — wraps the whole app, owns the active theme state.
+ * ThemeProvider — accent theme + light/dark color scheme.
  *
- * The boot script in `src/app/layout.tsx` has already applied
- * `document.documentElement.dataset.theme` before React hydrates, so
- * by the time this Provider mounts the page is already painted in
- * the right colors. We just have to read what's there and keep it
- * in sync going forward.
- *
- * Persistence is localStorage only (device-scoped). A future
- * follow-up could mirror to `profiles.preferences` for cross-device
- * sync, but a per-device choice is also defensible — your phone may
- * deserve a different theme than your laptop.
+ * Boot script in layout.tsx applies both on <html> before hydrate.
  */
 
 interface ThemeContextValue {
   theme: ThemeId;
   setTheme: (next: ThemeId) => void;
+  colorScheme: ColorSchemeId;
+  setColorScheme: (next: ColorSchemeId) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+export function applyColorSchemeToDocument(scheme: ColorSchemeId): void {
+  if (typeof document === "undefined") return;
+  document.documentElement.dataset.colorScheme = scheme;
+  document.documentElement.classList.toggle("dark", scheme === "dark");
+}
+
 function readInitialTheme(): ThemeId {
   if (typeof window === "undefined") return DEFAULT_THEME;
-  // Whatever the boot script applied is the truth. Fall back to
-  // localStorage / default if for some reason the attribute is missing
-  // (e.g. someone bypassed the boot script in a custom layout).
   const fromAttr = document.documentElement.dataset.theme;
   if (isThemeId(fromAttr)) return fromAttr;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (isThemeId(stored)) return stored;
   } catch {
-    // localStorage can throw in private-browsing / sandboxed contexts.
+    /* private browsing */
   }
   return DEFAULT_THEME;
 }
 
+function readInitialColorScheme(): ColorSchemeId {
+  if (typeof window === "undefined") return DEFAULT_COLOR_SCHEME;
+  const fromAttr = document.documentElement.dataset.colorScheme;
+  if (isColorSchemeId(fromAttr)) return fromAttr;
+  try {
+    const stored = localStorage.getItem(COLOR_SCHEME_STORAGE_KEY);
+    if (isColorSchemeId(stored)) return stored;
+  } catch {
+    /* private browsing */
+  }
+  return DEFAULT_COLOR_SCHEME;
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeId>(readInitialTheme);
+  const [colorScheme, setColorSchemeState] = useState<ColorSchemeId>(
+    readInitialColorScheme,
+  );
 
   const setTheme = useCallback((next: ThemeId) => {
     setThemeState(next);
@@ -65,27 +83,47 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      // Same private-browsing edge case as above; the in-memory state
-      // still updates so the current tab works for the session.
+      /* session-only */
     }
   }, []);
 
-  // Sync from other tabs — if you change your theme in tab A, tab B
-  // catches up without a refresh.
+  const setColorScheme = useCallback((next: ColorSchemeId) => {
+    setColorSchemeState(next);
+    applyColorSchemeToDocument(next);
+    try {
+      localStorage.setItem(COLOR_SCHEME_STORAGE_KEY, next);
+    } catch {
+      /* session-only */
+    }
+  }, []);
+
+  useEffect(() => {
+    applyColorSchemeToDocument(colorScheme);
+  }, [colorScheme]);
+
   useEffect(() => {
     function onStorage(e: StorageEvent) {
-      if (e.key !== STORAGE_KEY) return;
-      if (isThemeId(e.newValue) && e.newValue !== theme) {
+      if (e.key === STORAGE_KEY && isThemeId(e.newValue) && e.newValue !== theme) {
         setThemeState(e.newValue);
         document.documentElement.dataset.theme = e.newValue;
+      }
+      if (
+        e.key === COLOR_SCHEME_STORAGE_KEY &&
+        isColorSchemeId(e.newValue) &&
+        e.newValue !== colorScheme
+      ) {
+        setColorSchemeState(e.newValue);
+        applyColorSchemeToDocument(e.newValue);
       }
     }
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, [theme]);
+  }, [theme, colorScheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, setTheme, colorScheme, setColorScheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -94,12 +132,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
-    // Fallback for components rendered outside the provider — return a
-    // no-op setter so callers don't crash. The boot script still
-    // applied the right CSS attribute, so visually the page is fine.
     return {
       theme: DEFAULT_THEME,
       setTheme: () => {},
+      colorScheme: DEFAULT_COLOR_SCHEME,
+      setColorScheme: () => {},
     };
   }
   return ctx;

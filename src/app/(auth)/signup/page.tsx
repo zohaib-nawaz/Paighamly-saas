@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { APP_NAME } from "@/lib/brand";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,7 +145,7 @@ function SignupPageInner() {
           <CardDescription className="text-slate-400">
             {inviteToken
               ? "Verify your email, then accept the invitation to join your team."
-              : "Get started with CRM Template for WhatsApp"}
+              : `Get started with ${APP_NAME}`}
           </CardDescription>
         </CardHeader>
         <CardContent>

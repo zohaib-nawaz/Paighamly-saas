@@ -382,37 +382,12 @@ export function ContactDetailView({
 
             {/* Tabs */}
             <Tabs defaultValue="details" className="flex-1 flex flex-col min-h-0">
-              <TabsList className="bg-slate-800/50 border-b border-slate-700 mx-4 mt-3">
-                <TabsTrigger
-                  value="details"
-                  className="data-active:bg-slate-800 data-active:text-primary text-slate-400"
-                >
-                  Details
-                </TabsTrigger>
-                <TabsTrigger
-                  value="tags"
-                  className="data-active:bg-slate-800 data-active:text-primary text-slate-400"
-                >
-                  Tags
-                </TabsTrigger>
-                <TabsTrigger
-                  value="notes"
-                  className="data-active:bg-slate-800 data-active:text-primary text-slate-400"
-                >
-                  Notes
-                </TabsTrigger>
-                <TabsTrigger
-                  value="custom"
-                  className="data-active:bg-slate-800 data-active:text-primary text-slate-400"
-                >
-                  Custom Fields
-                </TabsTrigger>
-                <TabsTrigger
-                  value="deals"
-                  className="data-active:bg-slate-800 data-active:text-primary text-slate-400"
-                >
-                  Deals
-                </TabsTrigger>
+              <TabsList className="mx-4 mt-3 border-b border-border bg-muted/80">
+                <TabsTrigger value="details">Details</TabsTrigger>
+                <TabsTrigger value="tags">Tags</TabsTrigger>
+                <TabsTrigger value="notes">Notes</TabsTrigger>
+                <TabsTrigger value="custom">Custom Fields</TabsTrigger>
+                <TabsTrigger value="deals">Deals</TabsTrigger>
               </TabsList>
 
               {/* Details Tab */}

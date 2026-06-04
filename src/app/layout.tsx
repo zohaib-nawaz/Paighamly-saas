@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
-import { Toaster } from "sonner";
 import "./globals.css";
+import { AppToaster } from "@/components/theme/app-toaster";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { APP_DESCRIPTION, APP_NAME } from "@/lib/brand";
+import {
+  COLOR_SCHEME_STORAGE_KEY,
+  DEFAULT_COLOR_SCHEME,
+  COLOR_SCHEME_IDS,
+} from "@/lib/color-scheme";
 import { DEFAULT_THEME, STORAGE_KEY, THEME_IDS } from "@/lib/themes";
 
 const inter = Inter({
@@ -13,10 +19,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "wacrm",
-    template: "%s — wacrm",
+    default: APP_NAME,
+    template: `%s — ${APP_NAME}`,
   },
-  description: "Self-hostable CRM template for WhatsApp.",
+  description: APP_DESCRIPTION,
   robots: {
     index: false,
     follow: false,
@@ -32,8 +38,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#020617",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+  ],
 };
 
 // Inline boot script — runs before React hydrates so the user's
@@ -54,8 +62,18 @@ const THEME_BOOT_SCRIPT = `
     var saved = localStorage.getItem(STORAGE_KEY);
     var theme = ALLOWED.indexOf(saved) !== -1 ? saved : DEFAULT;
     document.documentElement.dataset.theme = theme;
+
+    var SCHEME_KEY = ${JSON.stringify(COLOR_SCHEME_STORAGE_KEY)};
+    var SCHEME_DEFAULT = ${JSON.stringify(DEFAULT_COLOR_SCHEME)};
+    var SCHEME_ALLOWED = ${JSON.stringify(COLOR_SCHEME_IDS)};
+    var savedScheme = localStorage.getItem(SCHEME_KEY);
+    var scheme = SCHEME_ALLOWED.indexOf(savedScheme) !== -1 ? savedScheme : SCHEME_DEFAULT;
+    document.documentElement.dataset.colorScheme = scheme;
+    document.documentElement.classList.toggle('dark', scheme === 'dark');
   } catch (_e) {
     document.documentElement.dataset.theme = ${JSON.stringify(DEFAULT_THEME)};
+    document.documentElement.dataset.colorScheme = ${JSON.stringify(DEFAULT_COLOR_SCHEME)};
+    document.documentElement.classList.add('dark');
   }
 })();
 `;
@@ -69,7 +87,8 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme={DEFAULT_THEME}
-      className={`${inter.variable} h-full antialiased`}
+      data-color-scheme={DEFAULT_COLOR_SCHEME}
+      className={`${inter.variable} dark h-full antialiased`}
     >
       <head>
         <Script
@@ -81,17 +100,7 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-foreground font-sans">
         <ThemeProvider>
           {children}
-          <Toaster
-            theme="dark"
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: "rgb(30 41 59)",
-                border: "1px solid rgb(51 65 85)",
-                color: "white",
-              },
-            }}
-          />
+          <AppToaster />
         </ThemeProvider>
       </body>
     </html>

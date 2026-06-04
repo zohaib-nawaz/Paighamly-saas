@@ -81,13 +81,13 @@ export function PasswordForm() {
   };
 
   return (
-    <Card className="bg-slate-900/40 border-slate-800">
+    <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-white">
+        <CardTitle className="flex items-center gap-2">
           <KeyRound className="size-4 text-primary" />
           Password
         </CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardDescription>
           Use at least {MIN_PASSWORD} characters. You will stay signed in on
           this device after changing it.
         </CardDescription>
@@ -96,9 +96,7 @@ export function PasswordForm() {
       <CardContent>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="current-password" className="text-slate-200">
-              Current password
-            </Label>
+            <Label htmlFor="current-password">Current password</Label>
             <Input
               id="current-password"
               type="password"
@@ -112,9 +110,7 @@ export function PasswordForm() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="new-password" className="text-slate-200">
-                New password
-              </Label>
+              <Label htmlFor="new-password">New password</Label>
               <Input
                 id="new-password"
                 type="password"
@@ -127,9 +123,7 @@ export function PasswordForm() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password" className="text-slate-200">
-                Confirm new password
-              </Label>
+              <Label htmlFor="confirm-password">Confirm new password</Label>
               <Input
                 id="confirm-password"
                 type="password"
@@ -144,7 +138,7 @@ export function PasswordForm() {
           </div>
 
           {confirmError && (
-            <p className="rounded-md border border-red-500/30 bg-red-500/5 px-3 py-2 text-xs text-red-300">
+            <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-700 dark:text-red-300">
               {confirmError}
             </p>
           )}

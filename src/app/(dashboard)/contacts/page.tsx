@@ -368,21 +368,17 @@ export default function ContactsPage() {
                       >
                         <MoreHorizontal className="size-4" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-slate-900 border-slate-700"
-                      >
+                      <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
                             openEditForm(contact);
                           }}
-                          className="text-slate-300 focus:bg-slate-800 focus:text-white"
                         >
                           <Pencil className="size-4" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className="bg-slate-700" />
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                           variant="destructive"
                           onClick={(e) => {
