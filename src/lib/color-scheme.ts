@@ -1,9 +1,3 @@
-/**
- * Light / dark appearance (separate from accent `data-theme`).
- *
- * Accent themes (violet, emerald, …) only swap the primary color.
- * Color scheme swaps surface tokens (background, card, borders).
- */
 
 export const COLOR_SCHEME_IDS = ["dark", "light"] as const;
 

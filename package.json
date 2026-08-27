@@ -5,13 +5,13 @@
   "description": "Paighamly — WhatsApp CRM — shared inbox, contacts, sales pipelines, broadcasts, and no-code automations.",
   "license": "MIT",
   "author": "Arnas Donauskas",
-  "homepage": "https://github.com/ArnasDon/wacrm",
+  "homepage": "https://github.com/zohaib-nawaz/Paighamly",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArnasDon/wacrm.git"
+    "url": "git+https://github.com/zohaib-nawaz/Paighamly.git"
   },
   "bugs": {
-    "url": "https://github.com/ArnasDon/wacrm/issues"
+    "url": "https://github.com/zohaib-nawaz/Paighamly/issues"
   },
   "keywords": [
     "crm",
