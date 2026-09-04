@@ -341,6 +341,7 @@ html[data-color-scheme="light"] .divide-slate-800 > :not([hidden]) ~ :not([hidde
 html[data-color-scheme="light"] .text-white {
   color: var(--foreground);
 }
+html[data-color-scheme="light"] .text-slate-100,
 html[data-color-scheme="light"] .text-slate-200,
 html[data-color-scheme="light"] .text-slate-300 {
   color: var(--foreground);
